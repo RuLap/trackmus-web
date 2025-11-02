@@ -5,13 +5,12 @@ import { useSearchParams } from 'next/navigation'
 
 export default function ConfirmContent() {
   const searchParams = useSearchParams()
-  const code = searchParams.get('code')
-  const userId = searchParams.get('userId')
+  const token = searchParams.get('token')
 
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
 
   useEffect(() => {
-    if (!code || !userId) {
+    if (!token) {
       setStatus('error')
       return
     }
@@ -21,7 +20,7 @@ export default function ConfirmContent() {
         const res = await fetch(`https://api.trackmus.ru/auth/email/confirm`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code, userId }),
+          body: JSON.stringify({ token }),
         })
 
         if (!res.ok) throw new Error('Ошибка подтверждения')
@@ -33,7 +32,7 @@ export default function ConfirmContent() {
     }
 
     confirmEmail()
-  }, [code, userId])
+  }, [token])
 
   return (
     <div style={{
